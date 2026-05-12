@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>大师投研室</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="topbar brand-topbar">
+        <div class="brand-copy">
+          <p class="eyebrow">AI Agent 投资辩论系统</p>
+          <h1>大师投研室</h1>
+          <p class="brand-subtitle">
+            大师投研室，AI Agent 1:1 复刻巴菲特、索罗斯等传奇大师的投资风格，让他们同台辩论。每一次投资判断，都要经过多位大师的交锋、质询与裁决，为用户生成更透明、更可信的股票买卖建议和资金配置方案。
+          </p>
+        </div>
+        <div class="status" id="status">就绪</div>
+      </section>
+
+      <section id="workspace" class="workspace pre-result">
+        <form id="analyze-form" class="panel control-panel">
+          <label>
+            股票列表
+            <input id="symbols" value="贵州茅台, 平安银行, 宁德时代" maxlength="80" />
+          </label>
+          <label>
+            资金池
+            <input id="capital" type="number" min="10000" max="10000000" step="1" value="1000000" />
+          </label>
+          <button type="submit">运行多 Agent 分析</button>
+          <p class="hint">最多 6 支；支持股票代码或中文名称；资金池为 10000 到 10000000 的人民币整数。</p>
+        </form>
+
+        <section id="analysis-panel" class="panel analysis-panel hidden">
+          <div class="analysis-kicker">MAAD Pipeline</div>
+          <h2>多 Agent 正在交叉审阅</h2>
+          <div class="progress-steps" aria-label="分析进度">
+            <span>数据</span>
+            <span>大师</span>
+            <span>辩论</span>
+            <span>裁决</span>
+          </div>
+          <p>系统正在读取行情、财务和文本信号，让不同风格的大师独立给出观点，再围绕分歧进入 MAAD 辩论。</p>
+          <div class="pulse-row" aria-hidden="true">
+            <i></i>
+            <i></i>
+            <i></i>
+          </div>
+        </section>
+
+        <section class="panel summary-panel result-section hidden">
+          <h2>投资经理结论</h2>
+          <p id="summary">等待分析结果。</p>
+          <p id="data-source" class="data-source"></p>
+          <div class="portfolio-chart-shell">
+            <canvas id="portfolio-chart"></canvas>
+          </div>
+        </section>
+      </section>
+
+      <section id="intro-section" class="intro-section">
+        <article class="intro-card">
+          <img src="/static/assets/masters/buffett.png" alt="Buffett" />
+          <div><strong>Buffett</strong><p>长期价值投资代表，强调护城河、现金流和优秀管理层，用耐心等待复利兑现。</p></div>
+        </article>
+        <article class="intro-card">
+          <img src="/static/assets/masters/graham.png" alt="Graham" />
+          <div><strong>Graham</strong><p>安全边际理论奠基人，重视低估值、资产保护和理性纪律，是价值投资的源头。</p></div>
+        </article>
+        <article class="intro-card">
+          <img src="/static/assets/masters/lynch.png" alt="Lynch" />
+          <div><strong>Lynch</strong><p>擅长在日常商业中发现成长公司，追求合理价格买入高质量增长。</p></div>
+        </article>
+        <article class="intro-card">
+          <img src="/static/assets/masters/soros.png" alt="Soros" />
+          <div><strong>Soros</strong><p>反身性投资大师，关注市场预期、情绪反馈和趋势变化中的关键转折。</p></div>
+        </article>
+        <article class="intro-card">
+          <img src="/static/assets/masters/dalio.png" alt="Dalio" />
+          <div><strong>Dalio</strong><p>全天候配置思想代表，强调风险均衡、宏观环境和组合韧性。</p></div>
+        </article>
+        <article class="intro-card">
+          <img src="/static/assets/masters/templeton.png" alt="Templeton" />
+          <div><strong>Templeton</strong><p>逆向价值投资者，常在悲观情绪和低估区域寻找长期修复机会。</p></div>
+        </article>
+        <article class="intro-card system-card">
+          <div><strong>辩论规则</strong><p>系统会让不同风格的大师先独立判断，再围绕分歧轮流发言。投资经理综合修正后的观点、风险和交易规则，给出最终买卖建议。</p></div>
+        </article>
+      </section>
+
+      <section class="grid two portfolio-signal-grid result-section hidden">
+        <div class="panel portfolio-panel">
+          <h2>最终组合</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>股票</th>
+                  <th>动作</th>
+                  <th>权重</th>
+                  <th>股数</th>
+                  <th>金额</th>
+                  <th>Alpha</th>
+                  <th>风险惩罚</th>
+                  <th>最终分</th>
+                  <th>依据</th>
+                </tr>
+              </thead>
+              <tbody id="portfolio"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="panel signal-panel">
+          <h2>信号雷达</h2>
+          <div class="signal-chart-shell">
+            <canvas id="signal-chart"></canvas>
+          </div>
+          <p class="signal-explainer">信号分值接近 1 表示该维度更积极，接近 0 表示更谨慎。技术信号关注价格趋势和成交活跃度，财务信号关注估值、盈利质量和增长，新闻信号反映研报与新闻样本的情绪方向。</p>
+        </div>
+      </section>
+
+      <section class="panel result-section hidden">
+        <div class="section-head">
+          <h2>大师 Agent 观点</h2>
+          <div id="filter-tabs" class="tabs"></div>
+        </div>
+        <div id="masters" class="cards"></div>
+      </section>
+
+      <section class="panel result-section hidden">
+        <div class="section-head">
+          <h2>MAAD 辩论</h2>
+          <div id="debate-tabs" class="tabs"></div>
+        </div>
+        <div id="debate" class="debate-list"></div>
+      </section>
+    </main>
+    <script src="/static/app.js"></script>
+  </body>
+</html>

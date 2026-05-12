@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quant 4.0 多 Agent A股投资系统</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="topbar">
+        <div>
+          <p class="eyebrow">Quant 4.0</p>
+          <h1>多 Agent A股投资决策台</h1>
+        </div>
+        <div class="status" id="status">就绪</div>
+      </section>
+
+      <section class="workspace">
+        <form id="analyze-form" class="panel control-panel">
+          <label>
+            股票列表
+            <input id="symbols" value="600519, 000001, 300750" maxlength="80" />
+          </label>
+          <label>
+            资金池
+            <input id="capital" type="number" min="10000" max="10000000" step="1" value="1000000" />
+          </label>
+          <button type="submit">运行多 Agent 分析</button>
+          <p class="hint">最多 6 支；资金池为 10000 到 10000000 的人民币整数。</p>
+        </form>
+
+        <section class="panel summary-panel">
+          <h2>投资经理结论</h2>
+          <p id="summary">等待分析结果。</p>
+          <canvas id="portfolio-chart" height="150"></canvas>
+        </section>
+      </section>
+
+      <section class="grid two">
+        <div class="panel">
+          <h2>最终组合</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>股票</th>
+                  <th>动作</th>
+                  <th>权重</th>
+                  <th>股数</th>
+                  <th>金额</th>
+                  <th>Alpha</th>
+                  <th>风险惩罚</th>
+                  <th>最终分</th>
+                  <th>依据</th>
+                </tr>
+              </thead>
+              <tbody id="portfolio"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>信号雷达</h2>
+          <canvas id="signal-chart" height="220"></canvas>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-head">
+          <h2>大师 Agent 观点</h2>
+          <div id="filter-tabs" class="tabs"></div>
+        </div>
+        <div id="masters" class="cards"></div>
+      </section>
+
+      <section class="panel">
+        <h2>MAAD 辩论</h2>
+        <div id="debate" class="debate-list"></div>
+      </section>
+    </main>
+    <script src="/static/app.js"></script>
+  </body>
+</html>
